@@ -22,12 +22,10 @@
         <label for="email"><strong>Email</strong></label>
         <br />
         <input type="text" name="email" required />
-        <br />
-        <br />
-        <div class="email error"></div>
+        <div style="color: red;" class="email error"></div>
         <label for="password"><strong>Password</strong></label>
         <input type="password" name="password" required />
-        <div class="password error"></div>
+        <div style="color: red;" class="password error"></div>
         <button class="submit">Sign Up</button>
       </form>
       <div>
@@ -63,6 +61,7 @@
       });
 
       const data = await res.json();
+      
       if (data.errors) {
         emailError.textContent = data.errors.email;
         passwordError.textContent = data.errors.password;

@@ -4,7 +4,7 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('its working?????????????????????');
+  res.send('Welcome to the homepage');
 });
 
 router.get('/signup', authController.getSignUp);

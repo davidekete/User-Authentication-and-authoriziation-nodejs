@@ -38,10 +38,8 @@ exports.postSignUp = (req, res) => {
         });
       })
       .catch((error) => {
-        console.log(error);
-        res.status(500).json({
-          description: helpers.errorHandler(error),
-        });
+        const errors = helpers.errorHandler(error);
+        res.status(400).json({ errors });
       });
   });
 };
