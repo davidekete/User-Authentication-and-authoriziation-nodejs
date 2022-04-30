@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const bcrypt = require('bcrypt');
 // const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
@@ -31,7 +32,10 @@ exports.postSignUp = (req, res) => {
       .then(() => {
         // eslint-disable-next-line no-underscore-dangle
         const token = helpers.createToken(user.email, user._id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 });
+        res.cookie('jwt', token, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24,
+        });
         res.status(201).json({
           message: 'User Created',
           user,
@@ -45,5 +49,24 @@ exports.postSignUp = (req, res) => {
 };
 
 exports.postLogin = (req, res) => {
-  res.send('new login');
+  const { email, password } = req.body;
+
+  try {
+    User.findOne({ email }, (error, user) => {
+      if (user) {
+        const validUser = bcrypt.compare(password, user.password);
+        if (validUser) {
+          const token = helpers.createToken(email, user._id);
+          res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+          res.status(200).json({ user: user._id });
+        } else {
+          res.status(404).json({ message: 'incorrect password' });
+        }
+      }
+      if (error) { return res.status(404).json({ error }); }
+    });
+  } catch (error) {
+    const errors = helpers.errorHandler(error);
+    res.status(400).json({ errors });
+  }
 };
