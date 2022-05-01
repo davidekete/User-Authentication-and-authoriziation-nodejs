@@ -60,10 +60,14 @@ exports.postLogin = (req, res) => {
           res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
           res.status(200).json({ user: user._id });
         } else {
-          res.status(404).json({ message: 'incorrect password' });
+          console.log('incorrect password');
+          throw new Error('incorrect password');
         }
       }
-      if (error) { return res.status(404).json({ error }); }
+      if (error) {
+        console.log(error);
+        throw new Error('Incorrect email');
+      }
     });
   } catch (error) {
     const errors = helpers.errorHandler(error);
